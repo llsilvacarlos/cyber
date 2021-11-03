@@ -51,7 +51,7 @@ surface = 0.3
 
 # Use our model to predict which fruit this is
 fruit_type = svm.predict([[weight, surface]])
-fruit_type = "orange" if fruit_type == 1 else "apple"
+fruit_type = "orange" if     == 1 else "apple"
 print (fruit_type)
 
 
