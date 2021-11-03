@@ -39,18 +39,6 @@ print("Test set size:", inputs_test.shape)
 
 mpl.rcParams['lines.markersize'] = 12
 
-# Plotting data
-#plt.figure(figsize=(12, 8))
-
-#plt.scatter(inputs_train[labels_train==1, 0], inputs_train[labels_train==1, 1], c='green',  label='ALOW')
-#plt.scatter(inputs_train[labels_train==0, 0], inputs_train[labels_train==0, 1], c='orange', label='MIDDLE')
-#plt.scatter(inputs_train[labels_train==2, 0], inputs_train[labels_train==2, 1], c='blue', label='HIGH')
-#plt.scatter(inputs_train[labels_train==3, 0], inputs_train[labels_train==3, 1], c='red', label='CRITICAL')
-
-#plt.xlabel('Weight')
-#plt.ylabel('Surface')
-#lt.legend()
-#plt.show()
 
 from sklearn.svm import SVC
 ### Fit the SVM classifier
