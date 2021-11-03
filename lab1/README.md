@@ -1,4 +1,4 @@
-# LAB1
+# LAB-1
 
 
 ![technology Python](https://img.shields.io/badge/technology-python-blue.svg)
