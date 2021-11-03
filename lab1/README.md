@@ -29,4 +29,4 @@ Note that the features in the dataset were converted to a numerical score repres
 
 Now it's your turn, use this dataset to train and evaluate a SVM classifier that learns to classify the severity of a vulnerability based on its CVSS features. The steps for this are outlined in the cell below, we have already split the data into training and test for you, fill the remaining gaps with your code.
 
-Important! Before you start, create a copy of this notebook to your google drive and work on your copy
+**Important! Before you start, create a copy of this notebook to your google drive and work on your copy
