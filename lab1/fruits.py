@@ -2,6 +2,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib as mpl
+from sklearn.metrics import precision_score, recall_score
 
 data = pd.read_csv('fruits.csv')
 
@@ -33,7 +34,7 @@ plt.scatter(inputs_test[labels_test==0, 0], inputs_test[labels_test==0, 1], c='g
 plt.xlabel('Weight')
 plt.ylabel('Surface')
 plt.legend()
-plt.show()
+#plt.show()
 
 
 from sklearn.svm import SVC
@@ -51,7 +52,7 @@ surface = 0.3
 
 # Use our model to predict which fruit this is
 fruit_type = svm.predict([[weight, surface]])
-fruit_type = "orange" if     == 1 else "apple"
+fruit_type = "orange" if fruit_type == 1 else "apple"
 print (fruit_type)
 
 
@@ -67,11 +68,9 @@ print(accuracy_score(labels_test, classifications)*100)
 
 
 from sklearn.metrics import confusion_matrix
-confusion_matrix(labels_test, classifications)
+print (confusion_matrix(labels_test, classifications))
 
-
-
-from sklearn.metrics import precision_score, recall_score
 
 print('Precision:', '{:0.2f}'.format(precision_score(labels_test, classifications)))
 print('Recall:', '{:0.2f}'.format(recall_score(labels_test, classifications)))
+
