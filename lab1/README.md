@@ -40,3 +40,6 @@ Now it's your turn, use this dataset to train and evaluate a SVM classifier that
 * Compute the confusion matrix for the testing set
 
 
+
+# Quick start
+* Install the Python Version 3.8.X and Anaconda (https://www.anaconda.com/)
