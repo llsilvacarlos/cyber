@@ -7,6 +7,11 @@ import scipy.stats as stats
 from sklearn import model_selection
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
+from sklearn.metrics import r2_score
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.pipeline import make_pipeline
+from sklearn.linear_model import LinearRegression
+
 
 # Read it and print the first five rows
 cvss_data = pd.read_csv('2020cvss_score.csv')
@@ -114,3 +119,101 @@ for train_indices, test_indices in kf.split(X):
   mses.append(test_mse)
 
 print("Average test MSE:", np.mean(mses))
+
+
+
+def adjusted_r2_score(y_preds, y_label, num_features):
+  r2 = r2_score(y_preds, y_label)
+  adjusted_r2 = (1 - (1 - r2) * ((y_label.shape[0] - 1)/(y_label.shape[0] - num_features - 1)))
+  return adjusted_r2
+
+num_features = X.shape[1]
+linear_reg = LinearRegression()
+r2s = []
+adjusted_r2s = []
+for train_indices, test_indices in kf.split(X):
+  print("Fold", len(r2s))
+  X_train, X_test = X[train_indices], X[test_indices]
+  y_train, y_test = y[train_indices], y[test_indices]
+  linear_reg.fit(X_train, y_train)
+
+  y_preds_train  = linear_reg.predict(X_train)
+  y_preds_test  = linear_reg.predict(X_test)
+
+  train_r2 = r2_score(y_preds_train, y_train)
+  test_r2 = r2_score(y_preds_test, y_test)
+  train_adjusted_r2 = adjusted_r2_score(y_preds_train, y_train, num_features)
+  test_adjusted_r2 = adjusted_r2_score(y_preds_test, y_test, num_features)
+
+  print("Training R^2:", train_r2)
+  print("Training adjusted R^2:", train_adjusted_r2)
+  print("Test R^2:", test_r2)
+  print("Test adjusted R^2:", test_adjusted_r2, "\n")
+
+  r2s.append(test_r2)
+  adjusted_r2s.append(test_adjusted_r2)
+
+print("Average performance")
+print("Average test r2:", np.mean(r2s))
+print("Average test adjusted r2:", np.mean(adjusted_r2s))
+
+
+
+####Polynomial Regression 
+
+degrees = [1, 2, 3, 4, 5]
+num_features = X_train.shape[1]
+mean_r2s = []
+mean_adjusted_r2s = []
+for degree in degrees:
+  poly_reg = make_pipeline(PolynomialFeatures(degree), LinearRegression())
+  r2s = []
+  adjusted_r2s = []
+  for train_indices, test_indices in kf.split(X):
+    X_train, X_test = X[train_indices], X[test_indices]
+    y_train, y_test = y[train_indices], y[test_indices]
+
+    poly_reg.fit(X_train, y_train)
+    y_preds_test  = poly_reg.predict(X_test)
+
+    test_r2 = r2_score(y_preds_test, y_test)
+    adjusted_test_r2 = adjusted_r2_score(y_preds_test, y_test, num_features)
+
+    r2s.append(test_r2)
+    adjusted_r2s.append(adjusted_test_r2)
+
+  mean_r2 = np.mean(r2s)
+  mean_adjusted_r2 = np.mean(adjusted_r2s)
+  print(f"Degree = {degree}")
+  print(f"Average test r2: {mean_r2}")
+  print(f"Average test adjusted r2: {mean_adjusted_r2} \n")
+
+  mean_r2s.append(mean_r2)
+  mean_adjusted_r2s.append(mean_adjusted_r2)
+
+
+
+
+
+
+barWidth = 0.3
+r1 = range(1, len(mean_r2s)+1)
+r2 = [x + barWidth for x in r1]
+
+# Plot bars
+r2_bars = plt.bar(r1, mean_r2s, width=barWidth, label="R$^{2}$")
+adjusted_r2_bars = plt.bar(r2, mean_adjusted_r2s, width=barWidth, label="Adjusted R$^{2}$")
+
+# Add text to top of bars
+for rect in r2_bars + adjusted_r2_bars:
+    height = rect.get_height()
+    plt.text(rect.get_x() + rect.get_width()/2.0, height, '%.2f' %height, ha='center', va='bottom')
+
+# Polish axes
+tick_locations = [(r1[i] + r2[i])/2 for i in range(len(r1))]
+plt.xticks(tick_locations, labels=r1)
+plt.xlabel("Polynomial Degree")
+plt.ylabel("Score")
+plt.legend()
+
+plt.show();
