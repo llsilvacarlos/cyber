@@ -27,13 +27,11 @@ vulColumns = ["attackVector","attackComplexity", "privilegesRequired","userInter
 
 
 vul = pd.DataFrame(cvss_data)
-# boston = boston[["CRIM", "NOX", "RM"]]
+
 vul = vul[vulColumns]
 vul["score"] = cvss_data.score
-# print("The size of our dataset (lines, columns):", boston.shape)
-vul.head()
 
-# print (boston.iloc[0:20])
+vul.head()
 
 sns.set(rc={'figure.figsize':(11.7,8.27)})
 sns.distplot(vul['score'], bins=50)
