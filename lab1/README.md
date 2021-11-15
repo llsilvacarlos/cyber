@@ -43,3 +43,64 @@ Now it's your turn, use this dataset to train and evaluate a SVM classifier that
 
 # Quick start
 * Install the Python Version 3.8.X and Anaconda (https://www.anaconda.com/)
+
+#### Load Data
+```
+cvss_data = pd.read_csv('2020cvss.csv')
+print (cvss_data.iloc[0:20])
+```
+
+#### Split dataset into training and testing sets
+
+```
+inputs_train, inputs_test, labels_train, labels_test = model_selection.train_test_split(
+      cvss_data[["attackVector", "attackComplexity", "privilegesRequired", "userInteraction", "confidentialityImpact", "integrityImpact", "availabilityImpact"]].values,
+      cvss_data['label'].values,
+      test_size=0.2
+    )
+ 
+```
+
+```
+print("Training set size:", inputs_train.shape)
+print("Test set size:", inputs_test.shape)
+````
+
+
+#### Fitting the SVM classifier
+
+
+
+~~~
+Selecting the classifier we want to use
+svm = SVC(kernel="linear")
+
+Learning (or training our model) based on inputs and labels from our dataset
+svm.fit(inputs_train, labels_train)
+~~~
+
+
+#### Try out your classifier using the vulnerability below:
+~~~
+vulnerability = [[0.85, 0.44, 0.27, 0.85, 0.66, 0.  , 0.  ]]
+cvss = svm.predict(vulnerability)
+cvss = score(cvss)
+print(cvss)
+~~~
+
+#### Use your classifier to classify the test set
+~~~
+classifications = svm.predict(inputs_test)
+print("SVM Test Set Score:")
+print(accuracy_score(labels_test, classifications)*100)
+~~~
+
+#### Finally, compute the confusion matrix for the testing set
+~~~
+print('Precision:', '{:0.2f}'.format(precision_score(labels_test, classifications,average='micro')))
+print('Recall:', '{:0.2f}'.format(recall_score(labels_test, classifications, average='micro')))
+print (confusion_matrix(labels_test, classifications))
+~~~
+
+
+
